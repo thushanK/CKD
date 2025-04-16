@@ -81,11 +81,12 @@ const HomePage: React.FC = () => {
           </TouchableOpacity>
         </Link>
 
+        {/* <Link href="/(tabs)/fluids/index" asChild> */}
         <TouchableOpacity style={styles.tile}>
           <Activity size={32} color="white" />
           <Text style={styles.tileText}>Weight Report</Text>
         </TouchableOpacity>
-
+      {/* </Link> */}
         <TouchableOpacity style={styles.tile}>
           <Thermometer size={32} color="white" />
           <Text style={styles.tileText}>Symptoms</Text>
