@@ -46,7 +46,7 @@ export default function Screen() {
             </TouchableOpacity>
           </Link> */}
 
-          <Link href="/login" asChild>
+          <Link href="/(tabs)/contacts" asChild>
             <TouchableOpacity style={styles.secondaryButton}>
               <Text style={styles.secondaryButtonText}>Sign Up</Text>
             </TouchableOpacity>
