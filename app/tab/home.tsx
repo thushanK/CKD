@@ -81,9 +81,6 @@ export default function Screen() {
       <View style={styles.header}>
         <Text style={styles.userName}>Hello, {userName}!</Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Feather name="search" size={22} color="#2196F3" />
-          </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} onPress={() => router.push("/tab/settings")}>
             <Feather name="settings" size={22} color="#2196F3" />
           </TouchableOpacity>
@@ -123,7 +120,7 @@ export default function Screen() {
       </View>
 
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
+        <TouchableOpacity style={styles.navButton}>
           <Feather name="home" size={24} color="white" />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
