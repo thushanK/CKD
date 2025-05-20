@@ -18,7 +18,7 @@ export default function PINLoginScreen() {
   const login = () => {
     if (pin.length === 4) {
       setTimeout(() => {
-        router.navigate("/fluid");
+        router.navigate("/register");
       }, 500);
     } else {
       alert("Please enter a 4-digit PIN");

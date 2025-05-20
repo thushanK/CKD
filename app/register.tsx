@@ -66,7 +66,7 @@ export default function UserProfileForm() {
         [fullName, contact, bloodType, email, dob]
       );
       Alert.alert('Success', 'User profile saved successfully', [
-        { text: 'OK', onPress: () => router.replace('/(tabs)/home') }
+        { text: 'OK', onPress: () => router.replace('/profile1') }
       ]);
     } catch (error) {
       console.error('DB Insert Error:', error);
