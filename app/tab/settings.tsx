@@ -60,6 +60,29 @@ export default function SettingsScreen() {
     );
   };
 
+  const handleClearMoodLogs = () => {
+    Alert.alert(
+      "Delete Mood Logs",
+      "Are you sure you want to permanently delete all mood tracking data?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await db.runAsync("DROP TABLE IF EXISTS mood_log");
+              Alert.alert("Success", "All mood logs have been deleted.");
+            } catch (err) {
+              console.log("Error deleting mood_log table:", err);
+              Alert.alert("Error", "Failed to delete mood logs.");
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.warningText}>
@@ -74,6 +97,10 @@ export default function SettingsScreen() {
 
       <TouchableOpacity style={styles.clearButton} onPress={handleClearUserProfile}>
         <Text style={styles.clearButtonText}>Clear User Profile</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.clearButton} onPress={handleClearMoodLogs}>
+        <Text style={styles.clearButtonText}>Clear Mood Logs</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/tab/home")}>
