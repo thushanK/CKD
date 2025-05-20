@@ -300,22 +300,22 @@ export default function IntakeScreen() {
       </Modal>
 
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/home")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
           <Feather name="home" size={24} color="white" />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/contact")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/contact")}>
           <Feather name="phone" size={24} color="white" />
           <Text style={styles.navText}>Contacts</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/medicationToday")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/medicationToday")}>
           <Feather name="activity" size={24} color="white" />
           <Text style={styles.navText}>Meds</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/profile")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/profile")}>
           <Feather name="user" size={24} color="white" />
           <Text style={styles.navText}>Profile</Text>
         </TouchableOpacity>

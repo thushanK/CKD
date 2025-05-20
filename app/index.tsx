@@ -22,7 +22,7 @@ export default function Screen() {
 
       const existing = await db.getAllAsync('SELECT * FROM user_profile LIMIT 1');
       if (existing.length > 0) {
-        router.replace("/(tabs)/home");
+        router.replace("/tab/home");
       }
     };
     checkUser();

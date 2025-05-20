@@ -76,7 +76,7 @@ export default function SettingsScreen() {
         <Text style={styles.clearButtonText}>Clear User Profile</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/home")}>
+      <TouchableOpacity style={styles.homeButton} onPress={() => router.push("/tab/home")}>
         <Text style={styles.homeButtonText}>Go to Home</Text>
       </TouchableOpacity>
     </SafeAreaView>

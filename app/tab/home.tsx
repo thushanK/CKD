@@ -13,12 +13,12 @@ export default function Screen() {
   const [searchTerm, setSearchTerm] = useState("");
 
   type TilePath =
-    | "/mood"
-    | "/fluid"
-    | "/weight"
-    | "/symptom"
-    | "/contact"
-    | "/medicationToday";
+    | "/tab/mood"
+    | "/tab/fluid"
+    | "/tab/weight"
+    | "/tab/symptom"
+    | "/tab/contact"
+    | "/tab/medicationToday";
 
   type Tile = {
     label: string;
@@ -27,12 +27,12 @@ export default function Screen() {
   };
 
   const allTiles: Tile[] = [
-    { label: "Mood Tracking", icon: <Feather name="smile" size={32} color="white" />, path: "/mood" },
-    { label: "Fluid Tracking", icon: <Feather name="droplet" size={32} color="white" />, path: "/fluid" },
-    { label: "Weight Report", icon: <Feather name="activity" size={32} color="white" />, path: "/weight" },
-    { label: "Symptoms", icon: <Feather name="thermometer" size={32} color="white" />, path: "/symptom" },
-    { label: "Contacts", icon: <Feather name="phone" size={32} color="white" />, path: "/contact" },
-    { label: "Medication", icon: <Feather name="box" size={32} color="white" />, path: "/medicationToday" } // No "pill" icon; "box" is a close substitute
+    { label: "Mood Tracking", icon: <Feather name="smile" size={32} color="white" />, path: "/tab/mood" },
+    { label: "Fluid Tracking", icon: <Feather name="droplet" size={32} color="white" />, path: "/tab/fluid" },
+    { label: "Weight Report", icon: <Feather name="activity" size={32} color="white" />, path: "/tab/weight" },
+    { label: "Symptoms", icon: <Feather name="thermometer" size={32} color="white" />, path: "/tab/symptom" },
+    { label: "Contacts", icon: <Feather name="phone" size={32} color="white" />, path: "/tab/contact" },
+    { label: "Medication", icon: <Feather name="box" size={32} color="white" />, path: "/tab/medicationToday" } // No "pill" icon; "box" is a close substitute
   ];
 
 
@@ -84,7 +84,7 @@ export default function Screen() {
           <TouchableOpacity style={styles.iconButton}>
             <Feather name="search" size={22} color="#2196F3" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} onPress={() => router.push("/settings")}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push("/tab/settings")}>
             <Feather name="settings" size={22} color="#2196F3" />
           </TouchableOpacity>
         </View>
@@ -123,22 +123,22 @@ export default function Screen() {
       </View>
 
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/home")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
           <Feather name="home" size={24} color="white" />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/contact")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/contact")}>
           <Feather name="phone" size={24} color="white" />
           <Text style={styles.navText}>Contacts</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/medicationToday")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/medicationToday")}>
           <Feather name="activity" size={24} color="white" />
           <Text style={styles.navText}>Meds</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/profile")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/profile")}>
           <Feather name="user" size={24} color="white" />
           <Text style={styles.navText}>Profile</Text>
         </TouchableOpacity>

@@ -154,7 +154,7 @@ export default function MedicationScreen() {
         <Text style={styles.addButtonText}>Download Taken Meds PDF</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.addButton} onPress={() => router.replace('/medication')}>
+      <TouchableOpacity style={styles.addButton} onPress={() => router.replace('/tab/medication')}>
         <Text style={styles.addButtonText}>Go to All Medications</Text>
       </TouchableOpacity>
 
@@ -208,22 +208,22 @@ export default function MedicationScreen() {
       </Modal>
 
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/home")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
           <Feather name="home" size={24} color="white" />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/contact")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/contact")}>
           <Feather name="phone" size={24} color="white" />
           <Text style={styles.navText}>Contacts</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/medication")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/medication")}>
           <Feather name="activity" size={24} color="white" />
           <Text style={styles.navText}>Meds</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/profile")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/profile")}>
           <Feather name="user" size={24} color="white" />
           <Text style={styles.navText}>Profile</Text>
         </TouchableOpacity>
