@@ -17,7 +17,7 @@ export default function Screen() {
     | "/(tabs)/fluid"
     | "/(tabs)/weights"
     | "/(tabs)/symptoms"
-    | "/(tabs)/contacts"
+    | "/contact"
     | "/medicationToday";
 
   type Tile = {
@@ -31,7 +31,7 @@ const allTiles: Tile[] = [
   { label: "Fluid Tracking", icon: <Feather name="droplet" size={32} color="white" />, path: "/(tabs)/fluid" },
   { label: "Weight Report", icon: <Feather name="activity" size={32} color="white" />, path: "/(tabs)/weights" },
   { label: "Symptoms", icon: <Feather name="thermometer" size={32} color="white" />, path: "/(tabs)/symptoms" },
-  { label: "Contacts", icon: <Feather name="phone" size={32} color="white" />, path: "/(tabs)/contacts" },
+  { label: "Contacts", icon: <Feather name="phone" size={32} color="white" />, path: "/contact" },
   { label: "Medication", icon: <Feather name="box" size={32} color="white" />, path: "/medicationToday" } // No "pill" icon; "box" is a close substitute
 ];
 

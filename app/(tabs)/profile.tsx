@@ -216,12 +216,12 @@ export default function ProfileScreen() {
       </Modal>
 
      <View style={styles.bottomNav}>
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/home")}>
         <Feather name="home" size={24} color="white" />
         <Text style={styles.navText}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contacts")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/contact")}>
         <Feather name="phone" size={24} color="white" />
         <Text style={styles.navText}>Contacts</Text>
       </TouchableOpacity>
