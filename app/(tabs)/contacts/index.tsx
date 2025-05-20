@@ -10,17 +10,14 @@ import {
   Alert,
   Linking,
 } from "react-native";
+
 import { useEffect, useState } from "react";
 import { useSQLiteContext } from "expo-sqlite";
 import * as Clipboard from "expo-clipboard";
-import {
-  Phone,
-  PlusCircle,
-  Trash2,
-  Pencil,
-  Smile, Droplet, Activity, Thermometer, Settings,
-	Search,  Pill, Home, User
-} from "lucide-react-native";
+
+// Import icons safely from lucide-react-native
+import { Phone, PlusCircle, Trash2, Pencil, Smile, Droplet, Activity, Thermometer, Settings, Search, Pill, Home, User } from "lucide-react-native";
+
 
 import { useRouter } from "expo-router"; // <-- Add this for navigation
 

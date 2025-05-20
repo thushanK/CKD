@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, StatusBar, TouchableOpacity, Modal, TextInput } from "react-native";
 import { useRouter } from "expo-router";
 
-import {
-  Smile, Droplet, Activity, Thermometer, Settings,
-  Search, Phone, Pill, Home, User
-} from 'lucide-react-native';
+// import {
+//   Smile, Droplet, Activity, Thermometer, Settings,
+//   Search, Phone, Pill, Home, User
+// } from 'lucide-react-native';
 
 export default function Tab() {
   const db = useSQLiteContext();
@@ -153,7 +153,7 @@ export default function Tab() {
 
       <StatusBar />
 
-      <View style={styles.bottomNav}>
+      {/* <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
           <Home size={24} color="white" /><Text style={styles.navText}>Home</Text></TouchableOpacity>
 
@@ -164,7 +164,7 @@ export default function Tab() {
           <Pill size={24} color="white" /><Text style={styles.navText}>Meds</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
           <User size={24} color="white" /><Text style={styles.navText}>Profile</Text></TouchableOpacity>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }
