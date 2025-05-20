@@ -221,12 +221,12 @@ export default function ProfileScreen() {
         <Text style={styles.navText}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contacts")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contact")}>
         <Feather name="phone" size={24} color="white" />
         <Text style={styles.navText}>Contacts</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medications")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medication")}>
         <Feather name="activity" size={24} color="white" />
         <Text style={styles.navText}>Meds</Text>
       </TouchableOpacity>

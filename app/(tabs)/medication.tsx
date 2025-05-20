@@ -8,11 +8,11 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { Calendar } from 'react-native-calendars';
 import { Feather } from '@expo/vector-icons';
-  import { useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 export default function MedicationScreen() {
   const db = useSQLiteContext();
-    const router = useRouter();
+  const router = useRouter();
   const [medications, setMedications] = useState<any[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState('');
@@ -183,27 +183,27 @@ export default function MedicationScreen() {
       <Text style={styles.title}>All Medications</Text>
 
       <ScrollView style={{ maxHeight: "68%" }}>
-  {medications.length === 0 ? (
-    <Text style={{ textAlign: 'center', color: '#888', marginTop: 20 }}>No medications found.</Text>
-  ) : (
-    medications.map((item) => (
-      <View key={item.id} style={[styles.medItem, { borderLeftColor: item.color }]}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.medName}>{item.name}</Text>
-          <Text style={styles.medDetail}>Amount: {item.amount} mg</Text>
-          <Text style={styles.medDetail}>Times: {item.times}</Text>
-          <Text style={styles.medDetail}>Period: {item.period}</Text>
-        </View>
-        <TouchableOpacity onPress={() => editMedication(item)}>
-          <Text style={styles.edit}>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => deleteMedication(item.id)}>
-          <Text style={styles.delete}>Delete</Text>
-        </TouchableOpacity>
-      </View>
-    ))
-  )}
-</ScrollView>
+        {medications.length === 0 ? (
+          <Text style={{ textAlign: 'center', color: '#888', marginTop: 20 }}>No medications found.</Text>
+        ) : (
+          medications.map((item) => (
+            <View key={item.id} style={[styles.medItem, { borderLeftColor: item.color }]}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.medName}>{item.name}</Text>
+                <Text style={styles.medDetail}>Amount: {item.amount} mg</Text>
+                <Text style={styles.medDetail}>Times: {item.times}</Text>
+                <Text style={styles.medDetail}>Period: {item.period}</Text>
+              </View>
+              <TouchableOpacity onPress={() => editMedication(item)}>
+                <Text style={styles.edit}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => deleteMedication(item.id)}>
+                <Text style={styles.delete}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          ))
+        )}
+      </ScrollView>
 
       <TouchableOpacity style={styles.addButton} onPress={() => { resetForm(); setModalVisible(true); }}>
         <Text style={styles.addButtonText}>Add Medication</Text>
@@ -284,27 +284,27 @@ export default function MedicationScreen() {
           </View>
         </Modal>
       )}
-             <View style={styles.bottomNav}>
-              <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
-                <Feather name="home" size={24} color="white" />
-                <Text style={styles.navText}>Home</Text>
-              </TouchableOpacity>
-        
-              <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contacts")}>
-                <Feather name="phone" size={24} color="white" />
-                <Text style={styles.navText}>Contacts</Text>
-              </TouchableOpacity>
-        
-              <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medications")}>
-                <Feather name="activity" size={24} color="white" />
-                <Text style={styles.navText}>Meds</Text>
-              </TouchableOpacity>
-        
-              <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
-                <Feather name="user" size={24} color="white" />
-                <Text style={styles.navText}>Profile</Text>
-              </TouchableOpacity>
-            </View>
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/home")}>
+          <Feather name="home" size={24} color="white" />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/contact")}>
+          <Feather name="phone" size={24} color="white" />
+          <Text style={styles.navText}>Contacts</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/medication")}>
+          <Feather name="activity" size={24} color="white" />
+          <Text style={styles.navText}>Meds</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/profile")}>
+          <Feather name="user" size={24} color="white" />
+          <Text style={styles.navText}>Profile</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }

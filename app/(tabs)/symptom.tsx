@@ -236,22 +236,22 @@ export default function SymptomsScreen() {
         </View>
       </Modal>
      <View style={styles.bottomNav}>
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/home")}>
         <Feather name="home" size={24} color="white" />
         <Text style={styles.navText}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contacts")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/contact")}>
         <Feather name="phone" size={24} color="white" />
         <Text style={styles.navText}>Contacts</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medications")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/medication")}>
         <Feather name="activity" size={24} color="white" />
         <Text style={styles.navText}>Meds</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/profile")}>
         <Feather name="user" size={24} color="white" />
         <Text style={styles.navText}>Profile</Text>
       </TouchableOpacity>

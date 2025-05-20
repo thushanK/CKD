@@ -122,15 +122,15 @@ export default function MedicationScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-    <Text style={styles.sectionTitle}>Medication Calendar</Text>
-    <Calendar
-      markingType="multi-dot"
-      markedDates={{
-        ...getMarkedDates(),
-        [selectedDate]: { ...(getMarkedDates()[selectedDate] || {}), selected: true }
-      }}
-      onDayPress={(day: { dateString: string; day: number; month: number; year: number }) => setSelectedDate(day.dateString)}
-    />
+      <Text style={styles.sectionTitle}>Medication Calendar</Text>
+      <Calendar
+        markingType="multi-dot"
+        markedDates={{
+          ...getMarkedDates(),
+          [selectedDate]: { ...(getMarkedDates()[selectedDate] || {}), selected: true }
+        }}
+        onDayPress={(day: { dateString: string; day: number; month: number; year: number }) => setSelectedDate(day.dateString)}
+      />
 
       <Text style={styles.sectionTitle}>Medications on {selectedDate}</Text>
       {medsOnSelectedDate.length === 0 ? (
@@ -154,7 +154,7 @@ export default function MedicationScreen() {
         <Text style={styles.addButtonText}>Download Taken Meds PDF</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.addButton} onPress={() => router.replace('/(tabs)/medications')}>
+      <TouchableOpacity style={styles.addButton} onPress={() => router.replace('/medication')}>
         <Text style={styles.addButtonText}>Go to All Medications</Text>
       </TouchableOpacity>
 
@@ -207,27 +207,27 @@ export default function MedicationScreen() {
         </View>
       </Modal>
 
-     <View style={styles.bottomNav}>
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
-        <Feather name="home" size={24} color="white" />
-        <Text style={styles.navText}>Home</Text>
-      </TouchableOpacity>
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/home")}>
+          <Feather name="home" size={24} color="white" />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contacts")}>
-        <Feather name="phone" size={24} color="white" />
-        <Text style={styles.navText}>Contacts</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/contact")}>
+          <Feather name="phone" size={24} color="white" />
+          <Text style={styles.navText}>Contacts</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medications")}>
-        <Feather name="activity" size={24} color="white" />
-        <Text style={styles.navText}>Meds</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/medication")}>
+          <Feather name="activity" size={24} color="white" />
+          <Text style={styles.navText}>Meds</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
-        <Feather name="user" size={24} color="white" />
-        <Text style={styles.navText}>Profile</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/profile")}>
+          <Feather name="user" size={24} color="white" />
+          <Text style={styles.navText}>Profile</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }

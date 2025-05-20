@@ -267,12 +267,12 @@ export default function ContactsScreen() {
           <Text style={styles.navText}>Contacts</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medicationToday")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/medicationToday")}>
           <Feather name="activity" size={24} color="white" />
           <Text style={styles.navText}>Meds</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/profile")}>
           <Feather name="user" size={24} color="white" />
           <Text style={styles.navText}>Profile</Text>
         </TouchableOpacity>
