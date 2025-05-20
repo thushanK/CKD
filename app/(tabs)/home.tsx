@@ -2,12 +2,9 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, TouchableOpacity, View, TextInput, Text } from "react-native";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  Smile, Droplet, Activity, Thermometer, Settings,
-  Search, Phone, Pill, Home, User
-} from 'lucide-react-native';
-// import motivationQuotes from './motivationTalks';
 
+// import motivationQuotes from './motivationTalks';
+import { Feather } from '@expo/vector-icons';
 export default function Screen() {
   const db = useSQLiteContext();
   const router = useRouter();
@@ -29,14 +26,15 @@ export default function Screen() {
     path: TilePath;
   };
 
-  const allTiles: Tile[] = [
-    { label: "Mood Tracking", icon: <Smile size={32} color="white" />, path: "/(tabs)/moods" },
-    { label: "Fluid Tracking", icon: <Droplet size={32} color="white" />, path: "/(tabs)/fluid" },
-    { label: "Weight Report", icon: <Activity size={32} color="white" />, path: "/(tabs)/weights" },
-    { label: "Symptoms", icon: <Thermometer size={32} color="white" />, path: "/(tabs)/symptoms" },
-    { label: "Contacts", icon: <Phone size={32} color="white" />, path: "/(tabs)/contacts" },
-    { label: "Medication", icon: <Pill size={32} color="white" />, path: "/medicationToday" }
-  ];
+const allTiles: Tile[] = [
+  { label: "Mood Tracking", icon: <Feather name="smile" size={32} color="white" />, path: "/(tabs)/moods" },
+  { label: "Fluid Tracking", icon: <Feather name="droplet" size={32} color="white" />, path: "/(tabs)/fluid" },
+  { label: "Weight Report", icon: <Feather name="activity" size={32} color="white" />, path: "/(tabs)/weights" },
+  { label: "Symptoms", icon: <Feather name="thermometer" size={32} color="white" />, path: "/(tabs)/symptoms" },
+  { label: "Contacts", icon: <Feather name="phone" size={32} color="white" />, path: "/(tabs)/contacts" },
+  { label: "Medication", icon: <Feather name="box" size={32} color="white" />, path: "/medicationToday" } // No "pill" icon; "box" is a close substitute
+];
+
 
   const [filteredTiles, setFilteredTiles] = useState(allTiles);
 
@@ -84,10 +82,10 @@ export default function Screen() {
         <Text style={styles.userName}>Hello, {userName}!</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.iconButton}>
-            <Search size={22} color="#2196F3" />
+            <Feather name="search" size={22} color="#2196F3" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton} onPress={() => router.push("/settings")}>
-            <Settings size={22} color="#2196F3" />
+            <Feather name="settings" size={22} color="#2196F3" />
           </TouchableOpacity>
         </View>
       </View>
@@ -101,7 +99,7 @@ export default function Screen() {
       />
 
       <View style={styles.motivationPanel}>
-        <Smile size={24} color="#2196F3" />
+        <Feather name="smile" size={24} color="#2196F3" />
         <Text style={styles.motivationText}>{currentQuote}</Text>
       </View>
 
@@ -124,23 +122,27 @@ export default function Screen() {
         )}
       </View>
 
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push("/(tabs)/home")}>
-          <Home size={24} color="white" /><Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
+     <View style={styles.bottomNav}>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
+        <Feather name="home" size={24} color="white" />
+        <Text style={styles.navText}>Home</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push("/(tabs)/contacts")}>
-          <Phone size={24} color="white" /><Text style={styles.navText}>Contacts</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contacts")}>
+        <Feather name="phone" size={24} color="white" />
+        <Text style={styles.navText}>Contacts</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push("/(tabs)/medications")}>
-          <Pill size={24} color="white" /><Text style={styles.navText}>Meds</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medications")}>
+        <Feather name="activity" size={24} color="white" />
+        <Text style={styles.navText}>Meds</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navButton} onPress={() => router.push("/(tabs)/profile")}>
-          <User size={24} color="white" /><Text style={styles.navText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
+        <Feather name="user" size={24} color="white" />
+        <Text style={styles.navText}>Profile</Text>
+      </TouchableOpacity>
+    </View>
     </SafeAreaView>
   );
 }

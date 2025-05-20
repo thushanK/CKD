@@ -16,10 +16,8 @@ import { useEffect, useRef, useState } from "react";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { useSQLiteContext } from "expo-sqlite";
-import {
-  Smile, Droplet, Activity, Thermometer, Settings,
-  Search, Phone, Pill, Home, User
-} from 'lucide-react-native';
+import { Feather } from '@expo/vector-icons';
+
 import { useRouter } from "expo-router";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -302,15 +300,26 @@ export default function IntakeScreen() {
       </Modal>
 
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
-          <Home size={24} color="white" /><Text style={styles.navText}>Home</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/fluid")}>
-          <Droplet size={24} color="white" /><Text style={styles.navText}>Fluid</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medications")}>
-          <Pill size={24} color="white" /><Text style={styles.navText}>Meds</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
-          <User size={24} color="white" /><Text style={styles.navText}>Profile</Text></TouchableOpacity>
-      </View>
+       <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/home")}>
+         <Feather name="home" size={24} color="white" />
+         <Text style={styles.navText}>Home</Text>
+       </TouchableOpacity>
+ 
+       <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/contacts")}>
+         <Feather name="phone" size={24} color="white" />
+         <Text style={styles.navText}>Contacts</Text>
+       </TouchableOpacity>
+ 
+       <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/medications")}>
+         <Feather name="activity" size={24} color="white" />
+         <Text style={styles.navText}>Meds</Text>
+       </TouchableOpacity>
+ 
+       <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/(tabs)/profile")}>
+         <Feather name="user" size={24} color="white" />
+         <Text style={styles.navText}>Profile</Text>
+       </TouchableOpacity>
+     </View>
     </SafeAreaView>
   );
 }
