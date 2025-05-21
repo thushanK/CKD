@@ -26,7 +26,7 @@ export default function Tab() {
       if (goal.length > 0) {
         setDailyGoal(goal[0].amount);
       } else {
-        setDailyGoal(5000); // Set default to 5000ml
+        setDailyGoal(5000);
         await db.runAsync("INSERT INTO water_goal (amount) VALUES (?)", 5000);
       }
     }
@@ -88,16 +88,25 @@ export default function Tab() {
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>What is the water goal for today?</Text>
-              <TouchableOpacity onPress={() => setGoalModalVisible(false)} />
             </View>
             <Text style={styles.inputLabel}>Water in ml</Text>
-            <TextInput style={styles.input} placeholder="Enter goal" value={waterAmount} onChangeText={setWaterAmount} keyboardType="numeric" />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter goal"
+              value={waterAmount}
+              onChangeText={(text) => setWaterAmount(text.replace(/[^0-9]/g, ''))}
+              keyboardType="numeric"
+            />
             <TouchableOpacity style={styles.saveButton} onPress={setWaterGoal}>
               <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setGoalModalVisible(false)} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+
 
       <View style={styles.gaugeContainer}>
         <View style={styles.gaugeBackground}>
@@ -136,16 +145,25 @@ export default function Tab() {
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Add Water Intake</Text>
-              <TouchableOpacity onPress={() => setIntakeModalVisible(false)} />
             </View>
             <Text style={styles.inputLabel}>Water in ml</Text>
-            <TextInput style={styles.input} placeholder="Enter amount" value={waterAmount} onChangeText={setWaterAmount} keyboardType="numeric" />
+            <TextInput
+              style={styles.input}
+              placeholder="Enter amount"
+              value={waterAmount}
+              onChangeText={(text) => setWaterAmount(text.replace(/[^0-9]/g, ''))}
+              keyboardType="numeric"
+            />
             <TouchableOpacity style={styles.saveButton} onPress={setWaterConsumption}>
               <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setIntakeModalVisible(false)} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+
 
       <StatusBar />
       <View style={styles.bottomNav}>
@@ -326,14 +344,35 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   bottomNav: {
-    position: 'absolute', bottom: 0, left: 0, right: 0,
-    backgroundColor: '#2196F3', flexDirection: 'row', justifyContent: 'space-around',
-    paddingVertical: 12, borderTopLeftRadius: 16, borderTopRightRadius: 16,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#2196F3',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 12,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   navButton: {
     alignItems: 'center',
   },
   navText: {
-    color: 'white', fontSize: 12, marginTop: 4,
-  }
+    color: 'white',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  cancelButton: {
+    marginTop: 10,
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    color: "#333",
+    fontSize: 16,
+    fontWeight: "500",
+  },
 });
