@@ -93,6 +93,7 @@ export default function Tab() {
             <TextInput
               style={styles.input}
               placeholder="Enter goal"
+               placeholderTextColor="#888"
               value={waterAmount}
               onChangeText={(text) => setWaterAmount(text.replace(/[^0-9]/g, ''))}
               keyboardType="numeric"
@@ -150,6 +151,7 @@ export default function Tab() {
             <TextInput
               style={styles.input}
               placeholder="Enter amount"
+               placeholderTextColor="#888"
               value={waterAmount}
               onChangeText={(text) => setWaterAmount(text.replace(/[^0-9]/g, ''))}
               keyboardType="numeric"

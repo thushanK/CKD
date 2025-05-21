@@ -209,6 +209,7 @@ export default function IntakeScreen() {
             <TextInput
               keyboardType="numeric"
               placeholder="Amount (ml)"
+               placeholderTextColor="#888"
               style={styles.input}
               value={waterAmount}
               onChangeText={setWaterAmount}

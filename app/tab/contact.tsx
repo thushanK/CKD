@@ -181,10 +181,10 @@ export default function ContactsScreen() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{editingId !== null ? "Edit Contact" : "Add Contact"}</Text>
-            <TextInput style={styles.input} placeholder="Name" value={name} onChangeText={setName} />
-            <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
-            <TextInput style={styles.input} placeholder="Phone" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
-            <TextInput style={styles.input} placeholder="Type (e.g. Front Desk)" value={type} onChangeText={setType} />
+            <TextInput style={styles.input} placeholder="Name"  placeholderTextColor="#888" value={name} onChangeText={setName} />
+            <TextInput style={styles.input} placeholder="Email"  placeholderTextColor="#888" value={email} onChangeText={setEmail} keyboardType="email-address" />
+            <TextInput style={styles.input} placeholder="Phone"   placeholderTextColor="#888"value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+            <TextInput style={styles.input} placeholder="Type (e.g. Front Desk)"  placeholderTextColor="#888" value={type} onChangeText={setType} />
             <Text style={{ fontWeight: "bold", marginVertical: 10 }}>Select Color:</Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
               {colorOptions.map((color) => (
@@ -203,7 +203,7 @@ export default function ContactsScreen() {
               ))}
             </View>
             <TouchableOpacity style={styles.saveButton} onPress={saveContact}>
-              <Text style={styles.addButtonText}>{editingId !== null ? "Update" : "Save"}</Text>
+              <Text style={styles.saveButtonText}>{editingId !== null ? "Update" : "Save"}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={resetForm}>
               <Text style={styles.cancelText}>Cancel</Text>
@@ -306,6 +306,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     gap: 10,
+  },
+   saveButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
   addButtonText: {
     color: "#2196F3",
