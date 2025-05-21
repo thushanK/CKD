@@ -7,11 +7,9 @@ import { Calendar } from 'react-native-calendars';
 import { useSQLiteContext } from 'expo-sqlite';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
 import { Feather } from '@expo/vector-icons';
-
-import { useRouter } from "expo-router"; // <-- Add this for navigation
-
-
+import { useRouter } from "expo-router";
 
 type SymptomEntry = {
   id: number;
@@ -48,6 +46,12 @@ export default function SymptomsScreen() {
   };
 
   const onDayPress = async (day: any) => {
+    const today = new Date().toISOString().split('T')[0];
+    if (day.dateString > today) {
+      Alert.alert("Invalid Date", "You can't add symptoms for future dates.");
+      return;
+    }
+
     setSelectedDate(day.dateString);
     const result = await db.getAllAsync<SymptomEntry>('SELECT * FROM symptom_log WHERE date = ?', day.dateString);
     if (result.length > 0) {
@@ -128,8 +132,10 @@ export default function SymptomsScreen() {
       </html>
     `;
 
-    const { uri } = await Print.printToFileAsync({ html, base64: false });
-    await Sharing.shareAsync(uri);
+    const { uri } = await Print.printToFileAsync({ html });
+    const newPath = `${FileSystem.documentDirectory}symptoms_tracker.pdf`;
+    await FileSystem.moveAsync({ from: uri, to: newPath });
+    await Sharing.shareAsync(newPath);
   };
 
   const markedDates = entries.reduce((acc, curr) => {
@@ -207,6 +213,7 @@ export default function SymptomsScreen() {
             <TextInput
               style={styles.input}
               placeholder="Symptom (e.g., Headache)"
+              placeholderTextColor="#888"
               value={symptom}
               onChangeText={setSymptom}
             />
@@ -214,6 +221,7 @@ export default function SymptomsScreen() {
             <TextInput
               style={styles.input}
               placeholder="Description (optional)"
+              placeholderTextColor="#888"
               value={description}
               onChangeText={setDescription}
               multiline
@@ -235,156 +243,53 @@ export default function SymptomsScreen() {
           </View>
         </View>
       </Modal>
-     <View style={styles.bottomNav}>
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
-        <Feather name="home" size={24} color="white" />
-        <Text style={styles.navText}>Home</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/contact")}>
-        <Feather name="phone" size={24} color="white" />
-        <Text style={styles.navText}>Contacts</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/medication")}>
-        <Feather name="activity" size={24} color="white" />
-        <Text style={styles.navText}>Meds</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/profile")}>
-        <Feather name="user" size={24} color="white" />
-        <Text style={styles.navText}>Profile</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>  
+          <Feather name="home" size={24} color="white" />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/contact")}>  
+          <Feather name="phone" size={24} color="white" />
+          <Text style={styles.navText}>Contacts</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/medication")}>  
+          <Feather name="activity" size={24} color="white" />
+          <Text style={styles.navText}>Meds</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/profile")}>  
+          <Feather name="user" size={24} color="white" />
+          <Text style={styles.navText}>Profile</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    margin: 16,
-    color: '#4caf50',
-    textAlign: 'center',
-    paddingTop: "5%",
-  },
-  pdfButton: {
-    backgroundColor: '#e8f5e9',
-    margin: 16,
-    borderRadius: 24,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  pdfButtonText: {
-    color: '#4caf50',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  symptomScroll: {
-    flex: 1,
-    marginTop: 8,
-  },
-  symptomList: {
-    marginHorizontal: 16,
-    marginTop: 8,
-  },
-  symptomItem: {
-    backgroundColor: '#f1f8e9',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  symptomTextContainer: {
-    flex: 1,
-  },
-  symptomDate: {
-    fontSize: 12,
-    color: '#888',
-    marginBottom: 4,
-  },
-  symptomTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#2e7d32',
-  },
-  symptomDescription: {
-    fontSize: 14,
-    color: '#555',
-    marginTop: 4,
-  },
-  iconActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    flex: 1, justifyContent: 'center', alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-  },
-  modalTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-  },
-  saveButton: {
-    backgroundColor: '#4caf50',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  deleteButton: {
-    backgroundColor: '#ef4444',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  cancelButton: {
-    backgroundColor: '#bdbdbd',
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  bottomNav: {
-		position: 'absolute', bottom: 0, left: 0, right: 0,
-		backgroundColor: '#4caf50', flexDirection: 'row', justifyContent: 'space-around',
-		paddingVertical: 12, borderTopLeftRadius: 16, borderTopRightRadius: 16,
-	  },
-	  navButton: {
-		alignItems: 'center',
-	  },
-	  navText: {
-		color: 'white', fontSize: 12, marginTop: 4,
-	  }
+  title: { fontSize: 20, fontWeight: 'bold', margin: 16, color: '#4caf50', textAlign: 'center', paddingTop: '5%' },
+  pdfButton: { backgroundColor: '#e8f5e9', margin: 16, borderRadius: 24, paddingVertical: 12, alignItems: 'center' },
+  pdfButtonText: { color: '#4caf50', fontWeight: '600', fontSize: 16 },
+  symptomScroll: { flex: 1, marginTop: 8 },
+  symptomList: { marginHorizontal: 16, marginTop: 8 },
+  symptomItem: { backgroundColor: '#f1f8e9', borderRadius: 12, padding: 16, marginBottom: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  symptomTextContainer: { flex: 1 },
+  symptomDate: { fontSize: 12, color: '#888', marginBottom: 4 },
+  symptomTitle: { fontSize: 16, fontWeight: '600', color: '#2e7d32' },
+  symptomDescription: { fontSize: 14, color: '#555', marginTop: 4 },
+  iconActions: { flexDirection: 'row', alignItems: 'center' },
+  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContent: { width: '80%', backgroundColor: '#fff', borderRadius: 12, padding: 20 },
+  modalTitle: { fontSize: 16, fontWeight: '600', marginBottom: 12, textAlign: 'center' },
+  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, marginBottom: 16 },
+  saveButton: { backgroundColor: '#4caf50', paddingVertical: 12, borderRadius: 8, alignItems: 'center', marginBottom: 12 },
+  saveButtonText: { color: '#fff', fontWeight: '600' },
+  deleteButton: { backgroundColor: '#ef4444', paddingVertical: 12, borderRadius: 8, alignItems: 'center', marginBottom: 12 },
+  deleteButtonText: { color: '#fff', fontWeight: '600' },
+  cancelButton: { backgroundColor: '#bdbdbd', paddingVertical: 10, borderRadius: 8, alignItems: 'center' },
+  cancelButtonText: { color: '#fff', fontWeight: '600' },
+  bottomNav: { position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: '#4caf50', flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 12, borderTopLeftRadius: 16, borderTopRightRadius: 16 },
+  navButton: { alignItems: 'center' },
+  navText: { color: 'white', fontSize: 12, marginTop: 4 }
 });
