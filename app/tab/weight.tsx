@@ -18,12 +18,15 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { useRouter } from "expo-router";
 import { Feather } from '@expo/vector-icons';
+import * as FileSystem from 'expo-file-system'; 
 
 type WeightEntry = {
   id: number;
   weight: number;
   date: string;
 };
+
+
 
 export default function WeightScreen() {
   const db = useSQLiteContext();
@@ -120,39 +123,49 @@ export default function WeightScreen() {
     setModalVisible(true);
   };
 
-  const generatePDF = async () => {
-    const result = await db.getAllAsync<WeightEntry>('SELECT * FROM weight_log ORDER BY date DESC');
-    const rows = result.map((entry, i) => `
-      <tr style="background:${i % 2 === 0 ? '#f9f9f9' : '#fff'}">
-        <td>${entry.date}</td>
-        <td style="text-align:right;">${entry.weight} kg</td>
-      </tr>
-    `).join('');
+ const generatePDF = async () => {
+  const result = await db.getAllAsync<WeightEntry>('SELECT * FROM weight_log ORDER BY date DESC');
+  const rows = result.map((entry, i) => `
+    <tr style="background:${i % 2 === 0 ? '#f9f9f9' : '#fff'}">
+      <td>${entry.date}</td>
+      <td style="text-align:right;">${entry.weight} kg</td>
+    </tr>
+  `).join('');
 
-    const html = `
-      <html>
-        <head>
-          <style>
-            h1 { text-align: center; color: ${PURPLE}; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
-            th { background-color: ${PURPLE}; color: white; text-align: left; padding: 8px; }
-            td { padding: 8px; border-bottom: 1px solid #ccc; }
-            tr:hover { background-color: #f1f1f1; }
-          </style>
-        </head>
-        <body>
-          <h1>Weight Report</h1>
-          <table>
-            <thead><tr><th>Date</th><th style="text-align:right;">Weight</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </body>
-      </html>
-    `;
+  const html = `
+    <html>
+      <head>
+        <style>
+          h1 { text-align: center; color: #9C27B0; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+          th { background-color: #9C27B0; color: white; text-align: left; padding: 8px; }
+          td { padding: 8px; border-bottom: 1px solid #ccc; }
+          tr:hover { background-color: #f1f1f1; }
+        </style>
+      </head>
+      <body>
+        <h1>Weight Report</h1>
+        <table>
+          <thead><tr><th>Date</th><th style="text-align:right;">Weight</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </body>
+    </html>
+  `;
 
-    const { uri } = await Print.printToFileAsync({ html, base64: false });
-    await Sharing.shareAsync(uri);
-  };
+ 
+  const { uri } = await Print.printToFileAsync({ html });
+
+
+  const newPath = FileSystem.documentDirectory + 'weight_report.pdf';
+  await FileSystem.moveAsync({
+    from: uri,
+    to: newPath,
+  });
+
+
+  await Sharing.shareAsync(newPath);
+};
 
   const markedDates = entries.reduce((acc, curr) => {
     acc[curr.date] = {
@@ -170,10 +183,10 @@ export default function WeightScreen() {
   const chartData = (() => {
     const month = selectedDate.slice(0, 7);
     const filtered = entries.filter(e => e.date.startsWith(month));
-    return {
-      labels: filtered.map(e => e.date.slice(8)),
-      datasets: [{ data: filtered.map(e => e.weight) }]
-    };
+    const labels = filtered.map(e => e.date.slice(8));
+    const data = filtered.map(e => e.weight);
+
+    return { labels, data };
   })();
 
   return (
@@ -196,9 +209,12 @@ export default function WeightScreen() {
 
         <Text style={styles.chartTitle}>Monthly Weight Chart</Text>
 
-        {chartData.labels.length > 0 ? (
+        {(chartData.labels.length > 0 && chartData.data.length > 0) ? (
           <LineChart
-            data={chartData}
+            data={{
+              labels: chartData.labels,
+              datasets: [{ data: chartData.data }]
+            }}
             width={screenWidth - 32}
             height={220}
             yAxisSuffix="kg"
@@ -210,16 +226,12 @@ export default function WeightScreen() {
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               style: { borderRadius: 16 },
-              propsForDots: {
-                r: '5',
-                strokeWidth: '2',
-                stroke: '#fff',
-              },
+              propsForDots: { r: '5', strokeWidth: '2', stroke: '#fff' },
             }}
             style={{ marginVertical: 8, borderRadius: 16, alignSelf: 'center' }}
           />
         ) : (
-          <Text style={styles.noChart}>No data for this month</Text>
+          <Text style={styles.noChart}>No records for this month</Text>
         )}
 
         <TouchableOpacity style={styles.pdfButton} onPress={generatePDF}>
@@ -248,31 +260,31 @@ export default function WeightScreen() {
                 <Text style={styles.deleteButtonText}>Delete</Text>
               </TouchableOpacity>
             )}
+            <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
-     <View style={styles.bottomNav}>
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
-        <Feather name="home" size={24} color="white" />
-        <Text style={styles.navText}>Home</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/contact")}>
-        <Feather name="phone" size={24} color="white" />
-        <Text style={styles.navText}>Contacts</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/medication")}>
-        <Feather name="activity" size={24} color="white" />
-        <Text style={styles.navText}>Meds</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/profile")}>
-        <Feather name="user" size={24} color="white" />
-        <Text style={styles.navText}>Profile</Text>
-      </TouchableOpacity>
-    </View>
-
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
+          <Feather name="home" size={24} color="white" />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/contact")}>
+          <Feather name="phone" size={24} color="white" />
+          <Text style={styles.navText}>Contacts</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/medication")}>
+          <Feather name="activity" size={24} color="white" />
+          <Text style={styles.navText}>Meds</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/profile")}>
+          <Feather name="user" size={24} color="white" />
+          <Text style={styles.navText}>Profile</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -357,15 +369,36 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
+  cancelButton: {
+    backgroundColor: '#ccc',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  cancelButtonText: {
+    color: '#333',
+    fontWeight: '600',
+  },
   bottomNav: {
-		position: 'absolute', bottom: 0, left: 0, right: 0,
-		backgroundColor: '#9C27B0', flexDirection: 'row', justifyContent: 'space-around',
-		paddingVertical: 12, borderTopLeftRadius: 16, borderTopRightRadius: 16,
-	  },
-	  navButton: {
-		alignItems: 'center',
-	  },
-	  navText: {
-		color: 'white', fontSize: 12, marginTop: 4,
-	  }
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#9C27B0',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 12,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  navButton: {
+    alignItems: 'center',
+  },
+  navText: {
+    color: 'white',
+    fontSize: 12,
+    marginTop: 4,
+  }
 });
+
