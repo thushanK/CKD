@@ -1,15 +1,8 @@
+// (unchanged imports and type declarations)
 import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Alert,
-  ScrollView,
-  Dimensions,
+  SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Modal,
+  TextInput, Alert, ScrollView, Dimensions
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { LineChart } from 'react-native-chart-kit';
@@ -18,7 +11,8 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import { useRouter } from "expo-router";
 import { Feather } from '@expo/vector-icons';
-import * as FileSystem from 'expo-file-system'; 
+import * as FileSystem from 'expo-file-system';
+import { LucideView } from 'lucide-react-native';
 
 type WeightEntry = {
   id: number;
@@ -26,32 +20,28 @@ type WeightEntry = {
   date: string;
 };
 
-
-
 export default function WeightScreen() {
   const db = useSQLiteContext();
   const screenWidth = Dimensions.get('window').width;
-
   const router = useRouter();
+
   const PURPLE = '#9C27B0';
   const PURPLE_LIGHT = '#f3e5f5';
-  const PURPLE_DARK = '#6A1B9A';
 
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [weight, setWeight] = useState('');
   const [entries, setEntries] = useState<WeightEntry[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingEntry, setEditingEntry] = useState<WeightEntry | null>(null);
+  const [chartModalVisible, setChartModalVisible] = useState(false);
 
   useEffect(() => {
     const setup = async () => {
-      await db.runAsync(`
-        CREATE TABLE IF NOT EXISTS weight_log (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          weight REAL,
-          date TEXT UNIQUE
-        )
-      `);
+      await db.runAsync(`CREATE TABLE IF NOT EXISTS weight_log (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        weight REAL,
+        date TEXT UNIQUE
+      )`);
       fetchWeights();
     };
     setup();
@@ -74,8 +64,7 @@ export default function WeightScreen() {
     } else {
       await db.runAsync(
         'INSERT OR REPLACE INTO weight_log (weight, date) VALUES (?, ?)',
-        numWeight,
-        selectedDate
+        numWeight, selectedDate
       );
     }
 
@@ -86,14 +75,10 @@ export default function WeightScreen() {
   };
 
   const confirmDelete = () => {
-    Alert.alert(
-      "Delete Weight",
-      "Are you sure you want to delete this weight entry?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Delete", style: "destructive", onPress: deleteWeight }
-      ]
-    );
+    Alert.alert("Delete Weight", "Are you sure you want to delete this weight entry?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: deleteWeight }
+    ]);
   };
 
   const deleteWeight = async () => {
@@ -107,11 +92,7 @@ export default function WeightScreen() {
 
   const onDayPress = async (day: any) => {
     setSelectedDate(day.dateString);
-    const result = await db.getAllAsync<WeightEntry>(
-      'SELECT * FROM weight_log WHERE date = ?',
-      day.dateString
-    );
-
+    const result = await db.getAllAsync<WeightEntry>('SELECT * FROM weight_log WHERE date = ?', day.dateString);
     if (result.length > 0) {
       setEditingEntry(result[0]);
       setWeight(result[0].weight.toString());
@@ -119,53 +100,44 @@ export default function WeightScreen() {
       setEditingEntry(null);
       setWeight('');
     }
-
     setModalVisible(true);
   };
 
- const generatePDF = async () => {
-  const result = await db.getAllAsync<WeightEntry>('SELECT * FROM weight_log ORDER BY date DESC');
-  const rows = result.map((entry, i) => `
-    <tr style="background:${i % 2 === 0 ? '#f9f9f9' : '#fff'}">
-      <td>${entry.date}</td>
-      <td style="text-align:right;">${entry.weight} kg</td>
-    </tr>
-  `).join('');
+  const generatePDF = async () => {
+    const result = await db.getAllAsync<WeightEntry>('SELECT * FROM weight_log ORDER BY date DESC');
+    const rows = result.map((entry, i) => `
+      <tr style="background:${i % 2 === 0 ? '#f9f9f9' : '#fff'}">
+        <td>${entry.date}</td>
+        <td style="text-align:right;">${entry.weight} kg</td>
+      </tr>
+    `).join('');
 
-  const html = `
-    <html>
-      <head>
-        <style>
-          h1 { text-align: center; color: #9C27B0; }
-          table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
-          th { background-color: #9C27B0; color: white; text-align: left; padding: 8px; }
-          td { padding: 8px; border-bottom: 1px solid #ccc; }
-          tr:hover { background-color: #f1f1f1; }
-        </style>
-      </head>
-      <body>
-        <h1>Weight Report</h1>
-        <table>
-          <thead><tr><th>Date</th><th style="text-align:right;">Weight</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </body>
-    </html>
-  `;
+    const html = `
+      <html>
+        <head>
+          <style>
+            h1 { text-align: center; color: #9C27B0; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+            th { background-color: #9C27B0; color: white; text-align: left; padding: 8px; }
+            td { padding: 8px; border-bottom: 1px solid #ccc; }
+            tr:hover { background-color: #f1f1f1; }
+          </style>
+        </head>
+        <body>
+          <h1>Weight Report</h1>
+          <table>
+            <thead><tr><th>Date</th><th style="text-align:right;">Weight</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </body>
+      </html>
+    `;
 
- 
-  const { uri } = await Print.printToFileAsync({ html });
-
-
-  const newPath = FileSystem.documentDirectory + 'weight_report.pdf';
-  await FileSystem.moveAsync({
-    from: uri,
-    to: newPath,
-  });
-
-
-  await Sharing.shareAsync(newPath);
-};
+    const { uri } = await Print.printToFileAsync({ html });
+    const newPath = FileSystem.documentDirectory + 'weight_report.pdf';
+    await FileSystem.moveAsync({ from: uri, to: newPath });
+    await Sharing.shareAsync(newPath);
+  };
 
   const markedDates = entries.reduce((acc, curr) => {
     acc[curr.date] = {
@@ -185,13 +157,12 @@ export default function WeightScreen() {
     const filtered = entries.filter(e => e.date.startsWith(month));
     const labels = filtered.map(e => e.date.slice(8));
     const data = filtered.map(e => e.weight);
-
     return { labels, data };
   })();
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+     
         <Text style={styles.title}>Weight Report</Text>
 
         <Calendar
@@ -207,39 +178,67 @@ export default function WeightScreen() {
           markingType="custom"
         />
 
-        <Text style={styles.chartTitle}>Monthly Weight Chart</Text>
-
-        {(chartData.labels.length > 0 && chartData.data.length > 0) ? (
-          <LineChart
-            data={{
-              labels: chartData.labels,
-              datasets: [{ data: chartData.data }]
-            }}
-            width={screenWidth - 32}
-            height={220}
-            yAxisSuffix="kg"
-            chartConfig={{
-              backgroundColor: PURPLE,
-              backgroundGradientFrom: '#BA68C8',
-              backgroundGradientTo: '#4A148C',
-              decimalPlaces: 1,
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              style: { borderRadius: 16 },
-              propsForDots: { r: '5', strokeWidth: '2', stroke: '#fff' },
-            }}
-            style={{ marginVertical: 8, borderRadius: 16, alignSelf: 'center' }}
-          />
-        ) : (
-          <Text style={styles.noChart}>No records for this month</Text>
-        )}
-
         <TouchableOpacity style={styles.pdfButton} onPress={generatePDF}>
           <Text style={styles.pdfButtonText}>Download PDF</Text>
         </TouchableOpacity>
-      </ScrollView>
 
-      <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={() => setModalVisible(false)}>
+        <TouchableOpacity style={styles.pdfButton} onPress={() => setChartModalVisible(true)}>
+          <Text style={styles.pdfButtonText}>View Chart</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.chartTitle}>All Weight Records</Text>
+        <ScrollView style={{ flex: 1, marginBottom: 90 }}>
+        {entries.length === 0 ? (
+          <Text style={styles.noChart}>No weight entries</Text>
+        ) : (
+          entries.map((entry) => (
+            <View key={entry.id} style={styles.recordItem}>
+              <Text style={styles.recordDate}>{entry.date}</Text>
+              <Text style={styles.recordWeight}>{entry.weight} kg</Text>
+            </View>
+          ))
+        )}
+        </ScrollView>
+    
+
+      {/* Chart Popup Modal */}
+      <Modal visible={chartModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={[styles.modalContent, { height: 320 }]}>
+            <Text style={styles.modalTitle}>Monthly Weight Chart</Text>
+            {(chartData.labels.length > 0 && chartData.data.length > 0) ? (
+              <LineChart
+                data={{
+                  labels: chartData.labels,
+                  datasets: [{ data: chartData.data }]
+                }}
+                width={screenWidth - 80}
+                height={220}
+                yAxisSuffix="kg"
+                chartConfig={{
+                  backgroundColor: PURPLE,
+                  backgroundGradientFrom: '#BA68C8',
+                  backgroundGradientTo: '#4A148C',
+                  decimalPlaces: 1,
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  style: { borderRadius: 16 },
+                  propsForDots: { r: '5', strokeWidth: '2', stroke: '#fff' },
+                }}
+                style={{ marginVertical: 8, borderRadius: 16, alignSelf: 'center' }}
+              />
+            ) : (
+              <Text style={styles.noChart}>No records for this month</Text>
+            )}
+            <TouchableOpacity style={styles.cancelButton} onPress={() => setChartModalVisible(false)}>
+              <Text style={styles.cancelButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Existing Add/Edit Modal */}
+      <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
@@ -248,7 +247,7 @@ export default function WeightScreen() {
             <TextInput
               style={styles.input}
               placeholder="Weight in kg"
-               placeholderTextColor="#888"
+              placeholderTextColor="#888"
               keyboardType="numeric"
               value={weight}
               onChangeText={setWeight}
@@ -267,8 +266,7 @@ export default function WeightScreen() {
           </View>
         </View>
       </Modal>
-
-      <View style={styles.bottomNav}>
+           <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navButton} onPress={() => router.replace("/tab/home")}>
           <Feather name="home" size={24} color="white" />
           <Text style={styles.navText}>Home</Text>
@@ -292,96 +290,25 @@ export default function WeightScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    margin: 16,
-    color: '#9C27B0',
-    textAlign: 'center',
-    paddingTop: "5%",
-  },
-  chartTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#9C27B0',
-    textAlign: 'center',
-    marginTop: 16,
-  },
-  noChart: {
-    textAlign: 'center',
-    color: '#999',
-    fontSize: 14,
-    marginVertical: 16,
-  },
-  pdfButton: {
-    backgroundColor: '#f3e5f5',
-    margin: 16,
-    borderRadius: 24,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  pdfButtonText: {
-    color: '#9C27B0',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 20,
-  },
-  modalTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 12,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
-  },
-  saveButton: {
-    backgroundColor: '#9C27B0',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  saveButtonText: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  deleteButton: {
-    backgroundColor: '#6A1B9A',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  cancelButton: {
-    backgroundColor: '#ccc',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  cancelButtonText: {
-    color: '#333',
-    fontWeight: '600',
-  },
-  bottomNav: {
+  title: { fontSize: 20, fontWeight: 'bold', margin: 16, color: '#9C27B0', textAlign: 'center' },
+  chartTitle: { fontSize: 16, fontWeight: '600', color: '#9C27B0', textAlign: 'center', marginTop: 16 },
+  noChart: { textAlign: 'center', color: '#999', fontSize: 14, marginVertical: 16 },
+  pdfButton: { backgroundColor: '#f3e5f5', marginHorizontal: 16, marginTop: 12, borderRadius: 24, paddingVertical: 12, alignItems: 'center' },
+  pdfButtonText: { color: '#9C27B0', fontWeight: '600', fontSize: 16 },
+  recordItem: { flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 16, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#eee' },
+  recordDate: { fontSize: 14, color: '#444' },
+  recordWeight: { fontSize: 14, fontWeight: 'bold', color: '#222' },
+  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContent: { width: '95%', backgroundColor: 'white', borderRadius: 12, padding: 20, height: '110%',  },
+  modalTitle: { fontSize: 16, fontWeight: '600', marginBottom: 12, textAlign: 'center' },
+  input: { borderWidth: 1, borderColor: '#ddd', borderRadius: 8, padding: 12, marginBottom: 20 },
+  saveButton: { backgroundColor: '#9C27B0', paddingVertical: 12, borderRadius: 8, alignItems: 'center', marginBottom: 12 },
+  saveButtonText: { color: 'white', fontWeight: '600' },
+  deleteButton: { backgroundColor: '#6A1B9A', paddingVertical: 12, borderRadius: 8, alignItems: 'center' },
+  deleteButtonText: { color: 'white', fontWeight: '600' },
+  cancelButton: { backgroundColor: '#ccc', paddingVertical: 12, borderRadius: 8, alignItems: 'center', marginTop: 12 },
+  cancelButtonText: { color: '#333', fontWeight: '600' },
+    bottomNav: {
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -402,4 +329,3 @@ const styles = StyleSheet.create({
     marginTop: 4,
   }
 });
-
