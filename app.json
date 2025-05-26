@@ -4,7 +4,7 @@
     "slug": "CKD",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/logoAPK.png",
     "scheme": "ckd",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/images/logoAPK.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
